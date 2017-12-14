@@ -4,9 +4,9 @@ using System.Linq.Expressions;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Refit.Insane.PowerPack.Data;
-using System.Net;
 using Refit.Insane.PowerPack.Attributes;
 using Refit.Insane.PowerPack.Configuration;
+using Fusillade;
 
 namespace Refit.Insane.PowerPack.Services
 {
@@ -93,9 +93,9 @@ namespace Refit.Insane.PowerPack.Services
 		    if (_implementations.ContainsKey(typeof(TApi))) 
 			    return (TApi)_implementations[typeof(TApi)];
 			
-		    var httpClientHandlerType = ApiDefinitionAttributeExtension.GetHttpClientHandlerType<TApi>();
-		    var httpClientMessageHandler = GetHandler(httpClientHandlerType);
-		    var httpClient = new HttpClient(httpClientMessageHandler)
+            var httpClientMessageHandler = GetMessageHandler<TApi>();
+		    
+            var httpClient = new HttpClient(httpClientMessageHandler)
 		    {
 			    BaseAddress = ApiDefinitionAttributeExtension.GetUri<TApi>(), 
 			    Timeout = ApiDefinitionAttributeExtension.GetTimeout<TApi>()
@@ -124,8 +124,37 @@ namespace Refit.Insane.PowerPack.Services
 		    return restApi;
 	    }
 
-	    private DelegatingHandler GetHandler(Type httpClientHandlerType)
+        private DelegatingHandler GetMessageHandler<TApi>()
+        {
+            var fusilladeHandlerType = FusilladeAttributeExtensions.GetHandlerType<TApi>();
+
+            if (fusilladeHandlerType != FusilladeHandlerType.None)
+            {
+                return GetFusilladeHandler(fusilladeHandlerType);
+            }
+
+            return GetConfiguredHandler<TApi>();
+        }
+
+        private DelegatingHandler GetFusilladeHandler(FusilladeHandlerType handlerType)
+        {
+            switch (handlerType)
+            {
+                case FusilladeHandlerType.Speculative:
+                    return NetCache.Speculative;
+                case FusilladeHandlerType.Background:
+                    return (DelegatingHandler)NetCache.Background;
+                case FusilladeHandlerType.UserInitiated:
+                    return (DelegatingHandler)NetCache.UserInitiated;
+                default:
+                    throw new Exception("Unknown Fusillade handler type");
+            }
+        }
+
+	    private DelegatingHandler GetConfiguredHandler<TApi>()
 	    {
+            var httpClientHandlerType = ApiDefinitionAttributeExtension.GetHttpClientHandlerType<TApi>();
+
 		    var httpClientMessageHandler = default(DelegatingHandler);
 
 		    if (_handlerFactories.ContainsKey(httpClientHandlerType) && !_handlerImplementations.ContainsKey(httpClientHandlerType))
@@ -155,8 +184,6 @@ namespace Refit.Insane.PowerPack.Services
         protected virtual Response<TResult> GetResponse<TResult>(ApiException fromApiException){
 			throw new InvalidOperationException($"If you are returning true in CanPrepareResponse method " +
 												"you have to override GetResponse methods.");
-        }
-
-		 
+        } 
     }
 }
