@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard1.6</TargetFramework>
-    <PackageTargetFallback>$(PackageTargetFallback);portable-win+net45+wp8+win81+wpa8;portable-net45+win8+wpa81</PackageTargetFallback>
+    <PackageTargetFallback>$(PackageTargetFallback);portable-net45+win8+wp8+wpa81</PackageTargetFallback>
   </PropertyGroup>
 
   <ItemGroup>
@@ -10,9 +10,5 @@
     <PackageReference Include="akavache" Version="5.0.0" />
     <PackageReference Include="Polly" Version="5.6.1" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="_ThirdParties\" />
-    <Folder Include="_ThirdParties\Punchclock\" />
-    <Folder Include="_ThirdParties\Fusillade\" />
-  </ItemGroup>
+
 </Project>
