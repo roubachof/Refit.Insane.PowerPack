@@ -68,6 +68,15 @@ namespace Refit.Insane.PowerPack.Services
 
 				throw;
 			}
+            catch (HttpRequestException requestException)
+            {
+                if (CanWrapNetworkException)
+                {
+                    WrapNetworkException(requestException);
+                }
+
+                throw;
+            }
 		}
 
 		public async Task<Response> Execute<TApi>(Expression<Func<TApi, Task>> executeApiMethod)
@@ -86,6 +95,15 @@ namespace Refit.Insane.PowerPack.Services
 
 				throw;
 			}
+            catch (HttpRequestException requestException)
+            {
+                if (CanWrapNetworkException)
+                {
+                    WrapNetworkException(requestException);
+                }
+
+                throw;
+            }
 		}
 	    
 	    private TApi GetRestApiImplementation<TApi>()
@@ -176,6 +194,8 @@ namespace Refit.Insane.PowerPack.Services
 
         protected virtual bool CanPrepareResponse(ApiException fromApiException) => false;
 
+        protected virtual bool CanWrapNetworkException => false;
+
         protected virtual Response GetResponse(ApiException fromApiException) {
             throw new InvalidOperationException($"If you are returning true in CanPrepareResponse method " +
                                                 "you have to override GetResponse methods.");
@@ -185,5 +205,11 @@ namespace Refit.Insane.PowerPack.Services
 			throw new InvalidOperationException($"If you are returning true in CanPrepareResponse method " +
 												"you have to override GetResponse methods.");
         } 
+
+        protected virtual void WrapNetworkException(HttpRequestException networkException)
+        {
+            throw new InvalidOperationException($"If you are returning true in CanHandleNetworkException method " +
+                                                "you have to override HandleNetworkException method.");
+        }
     }
 }
