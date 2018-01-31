@@ -8,6 +8,7 @@ using Punchclock;
 using Splat;
 using System.Threading;
 using System.Threading.Tasks;
+using Refit.Insane.PowerPack.Services;
 
 namespace Fusillade
 {
@@ -78,7 +79,9 @@ namespace Fusillade
     {
         static NetCache()
         {
-            var innerHandler = Locator.Current.GetService<HttpMessageHandler>() ?? new HttpClientHandler();
+            var messageHandlerFactory = Locator.Current.GetService<IHttpMessageHandlerFactory>();
+
+            var innerHandler = messageHandlerFactory?.Create() ?? new HttpClientHandler();
 
             // NB: In vNext this value will be adjusted based on the user's
             // network connection, but that requires us to go fully platformy
