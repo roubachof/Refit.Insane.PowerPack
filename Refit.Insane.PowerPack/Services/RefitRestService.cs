@@ -52,7 +52,7 @@ namespace Refit.Insane.PowerPack.Services
 		    _handlerFactories = handlerFactories;
 	    }
 
-		public async Task<Response<TResult>> Execute<TApi, TResult>(Expression<Func<TApi, Task<TResult>>> executeApiMethod)
+		public async Task<Response<TResult>> Execute<TApi, TResult>(Expression<Func<TApi, Task<TResult>>> executeApiMethod, bool invalidateCache = false)
 		{
 			var restApi = GetRestApiImplementation<TApi>();
 
@@ -79,7 +79,7 @@ namespace Refit.Insane.PowerPack.Services
             }
 		}
 
-		public async Task<Response> Execute<TApi>(Expression<Func<TApi, Task>> executeApiMethod)
+		public async Task<Response> Execute<TApi>(Expression<Func<TApi, Task>> executeApiMethod, bool invalidateCache = false)
 		{
 			var restApi = GetRestApiImplementation<TApi>();
 

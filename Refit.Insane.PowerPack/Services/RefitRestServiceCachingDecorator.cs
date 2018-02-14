@@ -28,16 +28,24 @@ namespace Refit.Insane.PowerPack.Services
             _refitCacheController = refitCacheController;
         }
 
-        public async Task<Response<TResult>> Execute<TApi, TResult>(Expression<Func<TApi, Task<TResult>>> executeApiMethod)
+        public async Task<Response<TResult>> Execute<TApi, TResult>(Expression<Func<TApi, Task<TResult>>> executeApiMethod, bool invalidateCache = false)
         {
             if (!_refitCacheController.IsMethodCacheable(executeApiMethod))
-                return await _decoratedRestService.Execute(executeApiMethod).ConfigureAwait(false);
+                return await _decoratedRestService.Execute(executeApiMethod, invalidateCache).ConfigureAwait(false);
 
             var cacheKey = _refitCacheController.GetCacheKey(executeApiMethod);
-            var cachedValue = await persistedCache.Get<TResult>(cacheKey);
-
-            if (cachedValue != null)
-                return new Response<TResult>(cachedValue);
+            if (invalidateCache)
+            {
+                await persistedCache.Delete(cacheKey);
+            }
+            else
+            {
+                var cachedValue = await persistedCache.Get<TResult>(cacheKey);
+                if (cachedValue != null)
+                {
+                    return new Response<TResult>(cachedValue);
+                }
+            }
 
             var restResponse = await _decoratedRestService.Execute(executeApiMethod);
 
@@ -51,7 +59,7 @@ namespace Refit.Insane.PowerPack.Services
             return restResponse;
         }
 
-        public Task<Response> Execute<TApi>(Expression<Func<TApi, Task>> executeApiMethod) => _decoratedRestService.Execute(executeApiMethod);
+        public Task<Response> Execute<TApi>(Expression<Func<TApi, Task>> executeApiMethod, bool invalidateCache = false) => _decoratedRestService.Execute(executeApiMethod, invalidateCache);
 
 
     }

@@ -21,8 +21,8 @@ namespace Refit.Insane.PowerPack.Services
             _restApiAssembly = restApiAssembly;
         }
 
-        public Task<Response> Execute<TApi>(Expression<Func<TApi, Task>> executeApiMethod)
-            => ExecuteMethod(() => proxiedRestService.Execute(executeApiMethod), executeApiMethod.Body as MethodCallExpression);
+        public Task<Response> Execute<TApi>(Expression<Func<TApi, Task>> executeApiMethod, bool invalidateCache = false)
+            => ExecuteMethod(() => proxiedRestService.Execute(executeApiMethod, invalidateCache), executeApiMethod.Body as MethodCallExpression);
 
         private Task<TResult> ExecuteMethod<TResult>(Func<Task<TResult>> restFunc, MethodCallExpression methodCallExpression)
         {
@@ -84,8 +84,8 @@ namespace Refit.Insane.PowerPack.Services
         }
 
 
-        public Task<Response<TResult>> Execute<TApi, TResult>(Expression<Func<TApi, Task<TResult>>> executeApiMethod)
-            => ExecuteMethod(() => proxiedRestService.Execute(executeApiMethod), executeApiMethod.Body as MethodCallExpression);
+        public Task<Response<TResult>> Execute<TApi, TResult>(Expression<Func<TApi, Task<TResult>>> executeApiMethod, bool invalidateCache = false)
+            => ExecuteMethod(() => proxiedRestService.Execute(executeApiMethod, invalidateCache), executeApiMethod.Body as MethodCallExpression);
 
     }
 }
