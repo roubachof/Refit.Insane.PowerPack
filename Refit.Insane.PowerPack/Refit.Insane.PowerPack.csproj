@@ -5,6 +5,10 @@
     <PackageTargetFallback>$(PackageTargetFallback);portable-net45+win8+wp8+wpa81</PackageTargetFallback>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <UseShortFileNames>True</UseShortFileNames>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="refit" Version="4.0.1" />
     <PackageReference Include="akavache" Version="5.0.0" />
