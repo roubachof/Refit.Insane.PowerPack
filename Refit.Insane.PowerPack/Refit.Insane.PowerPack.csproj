@@ -1,14 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard1.6</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <PackageTargetFallback>$(PackageTargetFallback);portable-net45+win8+wp8+wpa81</PackageTargetFallback>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="refit" Version="4.3.0" />
-    <PackageReference Include="akavache" Version="5.0.0" />
-    <PackageReference Include="Polly" Version="5.8.0" />
+    <PackageReference Include="refit" Version="4.6.58" />
+    <PackageReference Include="akavache" Version="6.2.3" />
+    <PackageReference Include="Polly" Version="6.1.2" />
   </ItemGroup>
 
 </Project>
