@@ -5,8 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="refit" Version="4.6.58" />
-    <PackageReference Include="akavache" Version="6.2.3" />
+    <PackageReference Include="refit" Version="4.6.99" />
+    <PackageReference Include="akavache" Version="6.4.1" />
     <PackageReference Include="Polly" Version="6.1.2" />
   </ItemGroup>
 
