@@ -1,3 +1,11 @@
+# Fork addons
+
+This fork:
+
+* is integrating `Fusillade`, 
+* fixes the possibility to decorate the service with decorators (for logging purposes for example), 
+* gives the user the possibility to throw exception instead of processing returned values. 
+
 # Refit.Insane.PowerPack
 Refit Insane PowerPack is a Refit library extensions which provides attribute based cache and auto-retry features.
 
